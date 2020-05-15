@@ -54,8 +54,17 @@ Resources:
       Environment:
         Variables:
           TABLE_NAME: !Ref DynamoDBDataStore
-      
-      
+      Events:
+        GetTweets:
+          Type: Api
+          Properties:
+            Path: /tweets
+            Method: GET
+            RestApiId:
+              Ref: HashTagAnalyticsApi
+            RequestModel:
+              Model: TweetsByHashTag
+              Required: True
 
   TwitterSearchFunction:
     Type: AWS::Serverless::Function
@@ -123,3 +132,22 @@ Resources:
           KeyType: RANGE
         Projection:
           ProjectionType: ALL
+  
+  HashTagAnalyticsApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: dev
+      EndpointConfiguration: REGIONAL
+      Models:
+        TweetsByHashTag:
+          type: object
+          properties:
+            hashtag:
+              type: string
+            sortby:
+              type: string
+              enum: [RT_COUNT, FAV_COUNT]
+            limit:
+              type: integer
+          required:
+            - hashtag
