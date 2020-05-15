@@ -22,5 +22,12 @@
  sam deploy --template-file ./packaged.yaml --stack-name <Stack-name> --s3-bucket <S3-destnation-bucket-name> --capabilities CAPABILITY_IAM --parameter-overrides TwitterHashtagParam=<Your target hash tag>
  ```
  
+ Local lambda proxy event generator:
+ ```
+ sam local generate-event apigateway aws-proxy --method GET > ./hashtag-analytics-lambda/e.json
+ ```
  
- 
+ Local test command:
+ ```
+ sam local invoke HashTagSimpleAnalyticFunction -e ./hashtag-analytics-lambda/e.json 
+ ```
