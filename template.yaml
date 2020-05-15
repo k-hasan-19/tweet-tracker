@@ -36,7 +36,26 @@ Parameters:
   TwitterAccessTokenSecret:
     Type: String
     Description: Twitter app Access Token Secret
+    
 Resources:
+
+  HashTagSimpleAnalyticFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Description: Access tweets by hashtag and query params
+      FunctionName: hashtag-analytics
+      CodeUri: ./hashtag-analytics-lambda
+      Handler: app.lambda_handler
+      Runtime: nodejs12.x
+      MemorySize: 256
+      Policies:
+        - DynamoDBReadPolicy:
+            TableName: !Ref DynamoDBDataStore
+      Environment:
+        Variables:
+          TABLE_NAME: !Ref DynamoDBDataStore
+      
+      
 
   TwitterSearchFunction:
     Type: AWS::Serverless::Function
@@ -46,10 +65,10 @@ Resources:
       CodeUri: ./hashtag-tracker-lambda
       Handler: app.lambda_handler
       Runtime: nodejs12.x
+      MemorySize: 256
       Policies:
         - DynamoDBWritePolicy:
             TableName: !Ref DynamoDBDataStore
-      MemorySize: 256
       Environment:
         Variables:
           TABLE_NAME: !Ref DynamoDBDataStore
