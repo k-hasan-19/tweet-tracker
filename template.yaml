@@ -1,0 +1,98 @@
+Transform: AWS::Serverless-2016-10-31
+Globals:
+  Function:
+    Timeout: 30
+
+Parameters:
+  TwitterHashtagParam:
+    Type: String
+    Default: CoronaVirus
+    Description: Twitter hashtag value to track
+  
+  DynamoDBTablename:
+    Type: String
+    Default: twitter-table
+    Description: DynamoDB table name
+    
+  TwitterComsumerKey:
+    Type: String
+    Description: Twitter app Consumer Key
+  
+  TwitterConsumerSecret:
+    Type: String
+    Description: Twitter app Consumer Secret
+  
+  TwitterAccessToken:
+    Type: String
+    Description: Twitter app Access Token
+  
+  TwitterAccessTokenSecret:
+    Type: String
+    Description: Twitter app Access Token Secret
+Resources:
+
+  TwitterSearchFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Description: Twitter hashtag tracker
+      FunctionName: hashtracker
+      CodeUri: ./hashtag-tracker-lambda
+      Handler: app.lambda_handler
+      Runtime: nodejs12.x
+      Policies:
+        - DynamoDBWritePolicy:
+            TableName: !Ref DynamoDBDataStore
+      MemorySize: 256
+      Environment:
+        Variables:
+          TABLE_NAME: !Ref DynamoDBDataStore
+          HASHTAG: !Ref TwitterHashtagParam
+          TWITTER_CONSUMER_KEY: !Ref TwitterComsumerKey
+          TWITTER_CONSUMER_SECRET: !Ref TwitterConsumerSecret
+          TWITTER_ACCESS_TOKEN_KEY: !Ref TwitterAccessToken
+          TWITTER_ACCESS_TOKEN_SECRET: !Ref TwitterAccessTokenSecret
+          
+      Events:
+        Timer:
+          Type: Schedule
+          Properties:
+            Schedule: rate(5 minutes)
+      
+    DependsOn: DynamoDBDataStore
+    
+  DynamoDBDataStore:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Ref DynamoDBTablename
+      KeySchema:
+      - AttributeName: PK
+        KeyType: HASH
+      - AttributeName: SK
+        KeyType: RANGE
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+      - AttributeName: PK
+        AttributeType: S
+      - AttributeName: SK
+        AttributeType: S
+      - AttributeName: retweet_count
+        AttributeType: N
+      - AttributeName: favorite_count
+        AttributeType: N
+      LocalSecondaryIndexes:
+      - IndexName: retweet_count-index
+        KeySchema:
+        - AttributeName: PK
+          KeyType: HASH
+        - AttributeName: retweet_count
+          KeyType: RANGE
+        Projection:
+          ProjectionType: ALL
+      - IndexName: favorite_count-index
+        KeySchema:
+        - AttributeName: PK
+          KeyType: HASH
+        - AttributeName: favorite_count
+          KeyType: RANGE
+        Projection:
+          ProjectionType: ALL
