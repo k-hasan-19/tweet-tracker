@@ -29,7 +29,7 @@ exports.lambda_handler = async(event, context) => {
         console.log(e)
         throw Error('Search Failed')
     }
-    const docClient = new AWS.DynamoDB.DocumentClient({ 'region': 'us-west-2' })
+    const docClient = new AWS.DynamoDB.DocumentClient()
     const params = generateParams(tablename, searchResult.statuses, hashtag)
     const dbevent = await insertData(docClient, params)
 
