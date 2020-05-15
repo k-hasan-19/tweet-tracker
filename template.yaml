@@ -62,9 +62,6 @@ Resources:
             Method: GET
             RestApiId:
               Ref: HashTagAnalyticsApi
-            RequestModel:
-              Model: TweetsByHashTag
-              Required: True
 
   TwitterSearchFunction:
     Type: AWS::Serverless::Function
@@ -138,16 +135,9 @@ Resources:
     Properties:
       StageName: dev
       EndpointConfiguration: REGIONAL
-      Models:
-        TweetsByHashTag:
-          type: object
-          properties:
-            hashtag:
-              type: string
-            sortby:
-              type: string
-              enum: [RT_COUNT, FAV_COUNT]
-            limit:
-              type: integer
-          required:
-            - hashtag
+      OpenApiVersion: 3.0.3
+      DefinitionBody:
+        'Fn::Transform':
+          Name: 'AWS::Include'
+          Parameters:
+            Location: hashtag-tracker-openapi.yaml

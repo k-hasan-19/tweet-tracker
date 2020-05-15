@@ -1,0 +1,56 @@
+openapi: 3.0.3
+info:
+  description: Twitter hashtag analytics web service
+  version: "0.1"
+  title: Twitter Hashtag Tracker
+  contact:
+    email: k.hasan.rajib@gmail.cloud
+
+x-amazon-apigateway-request-validators:
+  basic:
+    validateRequestBody: true
+    validateRequestParameters: true
+  params-only:
+    validateRequestBody: false
+    validateRequestParameters: true
+x-amazon-apigateway-minimum-compression-size: 1024
+
+paths:
+  /tweets:
+    get:
+      tags:
+        - analytics
+      summary: find list of tweets by hashtag
+      operationId: listTweetsByHashtag
+      parameters:
+        - in: query
+          name: hashtag
+          schema:
+            type: string
+          description: target hashtag
+          required: True
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          description: number of records to get
+        - in: query
+          name: sortby
+          schema:
+              type: string
+              enum: [RT_COUNT, FAV_COUNT]
+          description: sort tweets by retweet_count or favorite_count
+      responses:
+        '200':
+          description: successful operation
+        '400':
+          description: bad input parameter
+      x-amazon-apigateway-integration:
+        uri:
+          'Fn::Sub': >-
+            arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${HashTagSimpleAnalyticFunction.Arn}/invocations
+        httpMethod: POST
+        passthroughBehavior: WHEN_NO_TEMPLATES
+        contentHandling: CONVERT_TO_TEXT
+        type: aws_proxy
+      x-amazon-apigateway-request-validator: basic
