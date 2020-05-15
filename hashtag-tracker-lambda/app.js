@@ -16,7 +16,7 @@ exports.lambda_handler = async(event, context) => {
     let searchResult
     const hashtag = dotenv.parsed.HASHTAG || process.env.HASHTAG
     const tablename = dotenv.parsed.TABLE_NAME || process.env.TABLE_NAME
-
+    const tweetCount = dotenv.parsed.TWEET_COUNT || process.env.TWEET_COUNT
     try {
         searchResult = await client.get('search/tweets', {
             q: '#' + hashtag,

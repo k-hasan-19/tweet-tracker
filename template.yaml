@@ -9,6 +9,13 @@ Parameters:
     Default: CoronaVirus
     Description: Twitter hashtag value to track
   
+  TwitterTweetCount:
+    Type: Number
+    Default: 10
+    MaxValue: 100
+    MinValue: 1
+    Description: Number of popular tweets to store in DynamoDB during lambda execution time
+    
   DynamoDBTablename:
     Type: String
     Default: twitter-table
@@ -47,6 +54,7 @@ Resources:
         Variables:
           TABLE_NAME: !Ref DynamoDBDataStore
           HASHTAG: !Ref TwitterHashtagParam
+          TWEET_COUNT: !Ref TwitterTweetCount
           TWITTER_CONSUMER_KEY: !Ref TwitterComsumerKey
           TWITTER_CONSUMER_SECRET: !Ref TwitterConsumerSecret
           TWITTER_ACCESS_TOKEN_KEY: !Ref TwitterAccessToken
