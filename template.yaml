@@ -18,7 +18,7 @@ Parameters:
     
   DynamoDBTablename:
     Type: String
-    Default: twitter-table
+    Default: twitter-table-dev
     Description: DynamoDB table name
     
   TwitterComsumerKey:
@@ -107,11 +107,13 @@ Resources:
       - AttributeName: PK
         AttributeType: S
       - AttributeName: SK
-        AttributeType: S
+        AttributeType: N
       - AttributeName: retweet_count
         AttributeType: N
       - AttributeName: favorite_count
         AttributeType: N
+      - AttributeName: tweet_created_at
+        AttributeType: S
       LocalSecondaryIndexes:
       - IndexName: retweet_count-index
         KeySchema:
@@ -129,6 +131,14 @@ Resources:
           KeyType: RANGE
         Projection:
           ProjectionType: ALL
+      - IndexName: tweet_created_at-index
+        KeySchema:
+        - AttributeName: PK
+          KeyType: HASH
+        - AttributeName: tweet_created_at
+          KeyType: RANGE
+        Projection:
+          ProjectionType: ALL
   
   HashTagAnalyticsApi:
     Type: AWS::Serverless::Api
@@ -141,3 +151,8 @@ Resources:
           Name: 'AWS::Include'
           Parameters:
             Location: hashtag-tracker-openapi.yaml
+            
+Outputs:
+  ApiUrl:
+    Description: "API url of the dev environment"
+    Value: !Sub "https://${HashTagAnalyticsApi}.execute-api.${AWS::Region}.amazonaws.com/dev/"

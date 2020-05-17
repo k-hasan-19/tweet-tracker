@@ -63,11 +63,12 @@ function generateParams(tablename, statuses, hashtag) {
             PutRequest: {
                 Item: {
                     PK: hashtag,
-                    SK: datetime + '#' + status.id_str,
+                    SK: status.id,
                     tweet: status.text,
                     retweet_count: status.retweet_count,
                     favorite_count: status.favorite_count,
-                    possibly_sensitive: status.possibly_sensitive
+                    possibly_sensitive: status.possibly_sensitive,
+                    tweet_created_at: new Date(status.created_at).toISOString()
                 }
             }
         }
