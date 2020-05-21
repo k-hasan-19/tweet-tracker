@@ -20,7 +20,7 @@ exports.lambda_handler = async(event, context) => {
     try {
         searchResult = await client.get('search/tweets', {
             q: '#' + hashtag,
-            count: 10,
+            count: 100,
             result_type: 'popular',
             lang: 'en'
         })

@@ -49,7 +49,7 @@ function generateParams(tablename, hashtag, sortby, limit) {
             ':hashtag': hashtag
         },
         ScanIndexForward: false,
-        Limit: parseInt(limit, 10),
+        Limit: parseInt(limit, 100),
         ReturnConsumedCapacity: 'TOTAL'
     }
     return params
