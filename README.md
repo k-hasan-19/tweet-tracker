@@ -1,4 +1,4 @@
-# Twitter cannot stop you storing favorite hashtag history for unlimited time
+# Twitter cannot stop you storing your favorite hashtag history for unlimited time
          ___        ______     ____ _                 _  ___  
         / \ \      / / ___|   / ___| | ___  _   _  __| |/ _ \ 
        / _ \ \ /\ / /\___ \  | |   | |/ _ \| | | |/ _` | (_) |
