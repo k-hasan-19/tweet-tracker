@@ -1,3 +1,4 @@
+# Twitter cannot stop you storing favorite hashtag history for unlimited time
          ___        ______     ____ _                 _  ___  
         / \ \      / / ___|   / ___| | ___  _   _  __| |/ _ \ 
        / _ \ \ /\ / /\___ \  | |   | |/ _ \| | | |/ _` | (_) |
@@ -5,29 +6,12 @@
      /_/   \_\_/\_/  |____/   \____|_|\___/ \__,_|\__,_|  /_/ 
  ----------------------------------------------------------------- 
  
- Create the S3 bucket
- 
- ```
- aws s3 mb s3://hash.twitter.bank --region us-west-2
- ```
- Create the package
- 
- ```
- sam package --output-template-file packaged.yaml --s3-bucket <S3-destnation-bucket-name>
- ```
- 
- Deploy the package
- 
- ```
- sam deploy --template-file ./packaged.yaml --stack-name <Stack-name> --s3-bucket <S3-destnation-bucket-name> --capabilities CAPABILITY_IAM --parameter-overrides TwitterHashtagParam=<Your target hash tag>
- ```
- 
- Local lambda proxy event generator:
- ```
- sam local generate-event apigateway aws-proxy --method GET > ./hashtag-analytics-lambda/e.json
- ```
- 
- Local test command:
- ```
- sam local invoke HashTagSimpleAnalyticFunction -e ./hashtag-analytics-lambda/e.json 
- ```
+ `Warning`: We are still at development stage. It's not stable yet
+
+## Deployment using aws cloud9
+
+```
+sam deploy --guided
+```
+
+Just fill up the params and your hashtag tracker is all set
