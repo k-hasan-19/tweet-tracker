@@ -10,7 +10,6 @@ exports.lambda_handler = async(event, context) => {
     const tablename = dotenv.parsed && dotenv.parsed.TABLE_NAME || process.env.TABLE_NAME
     const sortby = event.queryStringParameters.sortby || 'RT_COUNT'
     const limit = event.queryStringParameters.limit || 10
-
     const docClient = new AWS.DynamoDB.DocumentClient()
     const params = generateParams(tablename, hashtag, sortby, limit)
     const data = await getData(docClient, params)
@@ -19,6 +18,7 @@ exports.lambda_handler = async(event, context) => {
 };
 
 function getData(docClient, params) {
+    console.log(params)
     return new Promise((resolve, reject) => {
         docClient.query(params, (err, data) => {
             if (err) {
@@ -49,7 +49,7 @@ function generateParams(tablename, hashtag, sortby, limit) {
             ':hashtag': hashtag
         },
         ScanIndexForward: false,
-        Limit: parseInt(limit, 100),
+        Limit: parseInt(limit)||100,
         ReturnConsumedCapacity: 'TOTAL'
     }
     return params
