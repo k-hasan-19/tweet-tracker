@@ -7,7 +7,7 @@ const AWS = require('aws-sdk')
 exports.lambda_handler = async(event, context) => {
     let datastoreSearchResult
     const hashtag = event.queryStringParameters.hashtag
-    const tablename = dotenv.parsed.TABLE_NAME || process.env.TABLE_NAME
+    const tablename = dotenv.parsed && dotenv.parsed.TABLE_NAME || process.env.TABLE_NAME
     const sortby = event.queryStringParameters.sortby || 'RT_COUNT'
     const limit = event.queryStringParameters.limit || 10
 
